@@ -28,7 +28,7 @@
             <div>
               <span>01</span>
               <strong>So'rovnoma</strong>
-              <p>26 ta baholash savoli va 4 ta ochiq savol.</p>
+              <p><b id="questionsCount">26</b> ta baholash savoli va <b id="openQuestionsCount">4</b> ta ochiq savol.</p>
             </div>
             <div>
               <span>02</span>
@@ -38,7 +38,7 @@
             <div>
               <span>03</span>
               <strong>HR natija</strong>
-              <p>Xodim xavf darajasi bo'yicha klasterga tushadi.</p>
+              <p><b id="clusterCount">3</b> klaster va <b id="trainingCount">0</b> ta Excel namunasi.</p>
             </div>
           </div>
 
@@ -76,14 +76,14 @@
 
             <div class="risk-summary">
               <div>
-                <span>Qisqa muddatli</span>
-                <strong>Yuqori xavf</strong>
+                <span id="riskLeadLabel">Qisqa muddatli</span>
+                <strong id="riskLeadTitle">Yuqori xavf</strong>
               </div>
-              <div class="risk-meter"><i style="width: 72%"></i></div>
-              <p>Ketish haqida o'ylash, past qoniqish va boshqa ish izlash signallari kuchli.</p>
+              <div class="risk-meter"><i id="riskLeadBar" style="width: 1%"></i></div>
+              <p id="riskLeadText">Excel bazadagi klasterlar tahlil qilinmoqda.</p>
             </div>
 
-            <div class="cluster-list">
+            <div id="clusterList" class="cluster-list">
               <div class="cluster-item danger">
                 <span></span>
                 <div>
@@ -115,16 +115,12 @@
                 <span>Model ko'radigan omillar</span>
                 <span>Score</span>
               </div>
-              <div class="chart-bars">
-                <div class="chart-line"><span>Ish haqi</span><div class="bar"><i style="width: 78%"></i></div><b>78</b></div>
-                <div class="chart-line"><span>Rahbariyat</span><div class="bar"><i style="width: 64%"></i></div><b>64</b></div>
-                <div class="chart-line"><span>Rivojlanish</span><div class="bar"><i style="width: 86%"></i></div><b>86</b></div>
-              </div>
+              <div id="factorBars" class="chart-bars"></div>
             </div>
 
             <div class="preview-footer">
-              <span>Manba: baza.xlsx</span>
-              <strong>Decision Tree</strong>
+              <span id="modelSource">Manba: baza.xlsx</span>
+              <strong id="modelName">Decision Tree</strong>
             </div>
           </div>
         </div>

@@ -258,6 +258,20 @@ function predict(tree, answers, featuresByKey) {
   return { prediction: node.prediction, samples: node.samples, path };
 }
 
+function topFactors(training, features) {
+  const ranked = features
+    .map((feature) => ({ key: feature.key, label: feature.label, gain: informationGain(training, feature) }))
+    .filter((item) => Number.isFinite(item.gain) && item.gain > 0)
+    .sort((a, b) => b.gain - a.gain)
+    .slice(0, 3);
+  const maxGain = ranked[0]?.gain || 1;
+  return ranked.map((item) => ({
+    key: item.key,
+    label: item.label,
+    score: Math.max(1, Math.round((item.gain / maxGain) * 100))
+  }));
+}
+
 function loadModel() {
   const stat = fs.statSync(EXCEL_FILE);
   if (cache && cache.mtimeMs === stat.mtimeMs) return cache.model;
@@ -299,12 +313,37 @@ function loadModel() {
     acc[row.target] = (acc[row.target] || 0) + 1;
     return acc;
   }, {});
+  const factors = topFactors(training, features);
 
   cache = {
     mtimeMs: stat.mtimeMs,
-    model: { features, featuresByKey, openQuestions, training, tree, distribution }
+    model: { features, featuresByKey, openQuestions, training, tree, distribution, factors }
   };
   return cache.model;
+}
+
+function modelSummary(model) {
+  const total = model.training.length || 1;
+  const clusters = ["qisqa", "orta", "uzoq"].map((key) => ({
+    key,
+    label: displayTarget(key),
+    count: model.distribution[key] || 0,
+    percent: Math.round(((model.distribution[key] || 0) / total) * 100)
+  }));
+  const highestRisk = clusters.slice().sort((a, b) => b.count - a.count)[0];
+  const results = readResults();
+
+  return {
+    modelName: "Decision Tree",
+    source: path.basename(EXCEL_FILE),
+    totalTraining: model.training.length,
+    resultsCount: results.length,
+    questionsCount: model.features.length,
+    openQuestionsCount: model.openQuestions.length,
+    clusters,
+    highestRisk,
+    factors: model.factors
+  };
 }
 
 function sendJson(res, status, payload) {
@@ -353,6 +392,12 @@ function staticFile(req, res) {
 
 async function handleRequest(req, res) {
   try {
+    if (req.url === "/api/summary" && req.method === "GET") {
+      const model = loadModel();
+      sendJson(res, 200, modelSummary(model));
+      return;
+    }
+
     if (req.url === "/api/questions" && req.method === "GET") {
       const model = loadModel();
       sendJson(res, 200, {

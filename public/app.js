@@ -17,6 +17,18 @@ const resultText = document.querySelector("#resultText");
 const pathList = document.querySelector("#pathList");
 const firstNameInput = document.querySelector("#firstName");
 const lastNameInput = document.querySelector("#lastName");
+const questionsCount = document.querySelector("#questionsCount");
+const openQuestionsCount = document.querySelector("#openQuestionsCount");
+const clusterCount = document.querySelector("#clusterCount");
+const trainingCount = document.querySelector("#trainingCount");
+const riskLeadLabel = document.querySelector("#riskLeadLabel");
+const riskLeadTitle = document.querySelector("#riskLeadTitle");
+const riskLeadBar = document.querySelector("#riskLeadBar");
+const riskLeadText = document.querySelector("#riskLeadText");
+const clusterList = document.querySelector("#clusterList");
+const factorBars = document.querySelector("#factorBars");
+const modelSource = document.querySelector("#modelSource");
+const modelName = document.querySelector("#modelName");
 let features = [];
 let openQuestions = [];
 let step = 0;
@@ -127,6 +139,67 @@ function escapeHtml(value) {
     .replace(/'/g, "&#039;");
 }
 
+function clusterClass(key) {
+  return { qisqa: "danger", orta: "warning", uzoq: "stable" }[key] || "warning";
+}
+
+function clusterNote(key) {
+  return {
+    qisqa: "tezkor HR suhbat",
+    orta: "kuzatuv va motivatsiya",
+    uzoq: "barqaror xodim"
+  }[key] || "tahlil guruhi";
+}
+
+function clusterStatus(key) {
+  return { qisqa: "High", orta: "Watch", uzoq: "Stable" }[key] || "Score";
+}
+
+function renderLandingSummary(data) {
+  questionsCount.textContent = data.questionsCount;
+  openQuestionsCount.textContent = data.openQuestionsCount;
+  clusterCount.textContent = data.clusters.length;
+  trainingCount.textContent = data.totalTraining;
+  modelSource.textContent = `Manba: ${data.source}`;
+  modelName.textContent = data.modelName;
+
+  const lead = data.highestRisk || data.clusters[0];
+  riskLeadLabel.textContent = lead.label;
+  riskLeadTitle.textContent = `${lead.percent}% bazada`;
+  riskLeadBar.style.width = `${Math.max(1, lead.percent)}%`;
+  riskLeadText.textContent = `${lead.count} ta Excel namunasi ${lead.label.toLowerCase()} klasteriga tegishli. Model yangi javoblarni shu baza bilan solishtiradi.`;
+
+  clusterList.innerHTML = data.clusters.map((cluster) => `
+    <div class="cluster-item ${clusterClass(cluster.key)}">
+      <span></span>
+      <div>
+        <strong>${escapeHtml(cluster.label)}</strong>
+        <small>${escapeHtml(cluster.count)} namuna / ${escapeHtml(cluster.percent)}%</small>
+      </div>
+      <b>${escapeHtml(clusterStatus(cluster.key))}</b>
+    </div>
+  `).join("");
+
+  factorBars.innerHTML = data.factors.map((factor) => `
+    <div class="chart-line">
+      <span>${escapeHtml(factor.label)}</span>
+      <div class="bar"><i style="width: ${escapeHtml(factor.score)}%"></i></div>
+      <b>${escapeHtml(factor.score)}</b>
+    </div>
+  `).join("");
+}
+
+async function loadLandingSummary() {
+  try {
+    const response = await fetch("/api/summary");
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Dashboard ma'lumotlari yuklanmadi.");
+    renderLandingSummary(data);
+  } catch (error) {
+    riskLeadText.textContent = error.message;
+  }
+}
+
 async function loadQuestions() {
   const response = await fetch("/api/questions");
   if (!response.ok) throw new Error("Savollarni yuklab bo'lmadi.");
@@ -224,3 +297,4 @@ restartBtn.addEventListener("click", () => {
 });
 
 quizForm.addEventListener("submit", submitQuiz);
+loadLandingSummary();
