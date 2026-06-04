@@ -1,5 +1,13 @@
 const resultsBody = document.querySelector("#resultsBody");
 const statsGrid = document.querySelector("#statsGrid");
+const loginPanel = document.querySelector("#loginPanel");
+const adminContent = document.querySelector("#adminContent");
+const loginForm = document.querySelector("#loginForm");
+const adminUser = document.querySelector("#adminUser");
+const adminPassword = document.querySelector("#adminPassword");
+const loginError = document.querySelector("#loginError");
+const logoutBtn = document.querySelector("#logoutBtn");
+const downloadLink = document.querySelector("#downloadLink");
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -18,6 +26,21 @@ function formatDate(value) {
     hour: "2-digit",
     minute: "2-digit"
   }).format(new Date(value));
+}
+
+function showAdmin() {
+  loginPanel.classList.add("hidden");
+  adminContent.classList.remove("hidden");
+  logoutBtn.classList.remove("hidden");
+  downloadLink.classList.remove("hidden");
+}
+
+function showLogin(message = "") {
+  loginPanel.classList.remove("hidden");
+  adminContent.classList.add("hidden");
+  logoutBtn.classList.add("hidden");
+  downloadLink.classList.add("hidden");
+  loginError.textContent = message;
 }
 
 function renderStats(results) {
@@ -65,11 +88,53 @@ function renderResults(results) {
 async function loadResults() {
   const response = await fetch("/api/admin/results");
   const data = await response.json();
+  if (response.status === 401) {
+    showLogin(data.error);
+    return;
+  }
   if (!response.ok) throw new Error(data.error || "Natijalar yuklanmadi.");
+  showAdmin();
   renderStats(data.results);
   renderResults(data.results);
 }
 
-loadResults().catch((error) => {
-  resultsBody.innerHTML = `<tr><td colspan="6">${escapeHtml(error.message)}</td></tr>`;
+async function checkSession() {
+  const response = await fetch("/api/admin/session");
+  const data = await response.json();
+  if (data.authenticated) {
+    await loadResults();
+    return;
+  }
+  showLogin();
+}
+
+loginForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  loginError.textContent = "";
+
+  try {
+    const response = await fetch("/api/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: adminUser.value.trim(),
+        password: adminPassword.value
+      })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Kirish amalga oshmadi.");
+    adminPassword.value = "";
+    await loadResults();
+  } catch (error) {
+    showLogin(error.message);
+  }
+});
+
+logoutBtn.addEventListener("click", async () => {
+  await fetch("/api/admin/logout", { method: "POST" });
+  showLogin();
+});
+
+checkSession().catch((error) => {
+  showLogin(error.message);
 });

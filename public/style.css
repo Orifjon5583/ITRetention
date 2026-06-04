@@ -659,6 +659,34 @@ textarea:focus-visible,
   background: rgba(255, 255, 255, 0.92);
 }
 
+.login-panel {
+  min-height: 520px;
+  display: grid;
+  place-items: center;
+}
+
+.login-card {
+  width: min(460px, 100%);
+  display: grid;
+  gap: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow);
+}
+
+.login-card .primary-btn {
+  width: 100%;
+}
+
+.login-error {
+  min-height: 20px;
+  margin: 0;
+  color: var(--red);
+  font-weight: 700;
+}
+
 .admin-table {
   width: 100%;
   min-width: 940px;

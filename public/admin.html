@@ -12,7 +12,8 @@
         <a class="brand-mark" href="/">Retention AI</a>
         <div class="topbar-actions">
           <a class="secondary-link" href="/">Test sahifasi</a>
-          <a class="primary-link" href="/api/admin/results.csv">Excelga yuklab olish</a>
+          <a id="downloadLink" class="primary-link hidden" href="/api/admin/results.csv">Excelga yuklab olish</a>
+          <button id="logoutBtn" class="secondary-btn hidden" type="button">Chiqish</button>
         </div>
       </header>
 
@@ -23,24 +24,43 @@
         </div>
       </header>
 
-      <section class="stats-grid" id="statsGrid"></section>
+      <section id="loginPanel" class="login-panel">
+        <form id="loginForm" class="login-card">
+          <p class="eyebrow">Admin kirish</p>
+          <h2>Login va parolni kiriting</h2>
+          <label class="field-label">
+            <span>Login</span>
+            <input id="adminUser" type="text" autocomplete="username" required>
+          </label>
+          <label class="field-label">
+            <span>Parol</span>
+            <input id="adminPassword" type="password" autocomplete="current-password" required>
+          </label>
+          <button class="primary-btn" type="submit">Kirish</button>
+          <p id="loginError" class="login-error"></p>
+        </form>
+      </section>
 
-      <section class="admin-table-wrap">
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>Sana</th>
-              <th>Ism familya</th>
-              <th>Natija</th>
-              <th>Ish tajribasi</th>
-              <th>Lavozim</th>
-              <th>Ochiq javoblar</th>
-            </tr>
-          </thead>
-          <tbody id="resultsBody">
-            <tr><td colspan="6">Yuklanmoqda...</td></tr>
-          </tbody>
-        </table>
+      <section id="adminContent" class="hidden">
+        <section class="stats-grid" id="statsGrid"></section>
+
+        <section class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Sana</th>
+                <th>Ism familya</th>
+                <th>Natija</th>
+                <th>Ish tajribasi</th>
+                <th>Lavozim</th>
+                <th>Ochiq javoblar</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody">
+              <tr><td colspan="6">Yuklanmoqda...</td></tr>
+            </tbody>
+          </table>
+        </section>
       </section>
     </main>
     <script src="admin.js"></script>

@@ -8,6 +8,10 @@ const PUBLIC_DIR = path.join(ROOT, "public");
 const EXCEL_FILE = path.join(ROOT, "baza.xlsx");
 const RESULTS_FILE = path.join(ROOT, "results.json");
 const PORT = process.env.PORT || 3000;
+const ADMIN_USER = process.env.ADMIN_USER || "admin";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+const ADMIN_COOKIE = "admin_session";
+const ADMIN_SESSION = process.env.ADMIN_SESSION || Math.random().toString(36).slice(2);
 
 const OPEN_QUESTION_KEYS = [
   "leaveReason",
@@ -351,6 +355,24 @@ function sendJson(res, status, payload) {
   res.end(JSON.stringify(payload));
 }
 
+function parseCookies(req) {
+  return Object.fromEntries(String(req.headers.cookie || "")
+    .split(";")
+    .map((item) => item.trim().split("="))
+    .filter((parts) => parts.length === 2)
+    .map(([key, value]) => [key, decodeURIComponent(value)]));
+}
+
+function isAdmin(req) {
+  return parseCookies(req)[ADMIN_COOKIE] === ADMIN_SESSION;
+}
+
+function requireAdmin(req, res) {
+  if (isAdmin(req)) return true;
+  sendJson(res, 401, { error: "Admin panelga kirish talab qilinadi." });
+  return false;
+}
+
 function collectBody(req) {
   return new Promise((resolve, reject) => {
     let body = "";
@@ -392,6 +414,38 @@ function staticFile(req, res) {
 
 async function handleRequest(req, res) {
   try {
+    if (req.url === "/api/admin/session" && req.method === "GET") {
+      sendJson(res, 200, { authenticated: isAdmin(req) });
+      return;
+    }
+
+    if (req.url === "/api/admin/login" && req.method === "POST") {
+      const body = JSON.parse(await collectBody(req) || "{}");
+      const username = String(body.username || "").trim();
+      const password = String(body.password || "");
+
+      if (username !== ADMIN_USER || password !== ADMIN_PASSWORD) {
+        sendJson(res, 401, { error: "Login yoki parol noto'g'ri." });
+        return;
+      }
+
+      res.writeHead(200, {
+        "Content-Type": "application/json; charset=utf-8",
+        "Set-Cookie": `${ADMIN_COOKIE}=${encodeURIComponent(ADMIN_SESSION)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400`
+      });
+      res.end(JSON.stringify({ authenticated: true }));
+      return;
+    }
+
+    if (req.url === "/api/admin/logout" && req.method === "POST") {
+      res.writeHead(200, {
+        "Content-Type": "application/json; charset=utf-8",
+        "Set-Cookie": `${ADMIN_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`
+      });
+      res.end(JSON.stringify({ authenticated: false }));
+      return;
+    }
+
     if (req.url === "/api/summary" && req.method === "GET") {
       const model = loadModel();
       sendJson(res, 200, modelSummary(model));
@@ -450,11 +504,13 @@ async function handleRequest(req, res) {
     }
 
     if (req.url === "/api/admin/results" && req.method === "GET") {
+      if (!requireAdmin(req, res)) return;
       sendJson(res, 200, { results: readResults() });
       return;
     }
 
     if (req.url === "/api/admin/results.csv" && req.method === "GET") {
+      if (!requireAdmin(req, res)) return;
       const model = loadModel();
       const csv = resultsToCsv(readResults(), model);
       res.writeHead(200, {
