@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>IT markaz xodimlari testi</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand-mark" href="/">IT Retention</a>
+        <div class="topbar-actions">
+          <a class="secondary-link" href="admin.html">Admin panel</a>
+        </div>
+      </header>
+
+      <section id="startScreen" class="start-screen">
+        <div class="start-left">
+          <div class="hero-kicker">
+            <span></span>
+            IT markaz xodimlari uchun HR diagnostika
+          </div>
+          <h1>Kim ketishi mumkinligini oldindan aniqlang</h1>
+          <p class="lead">Tizim xodim javoblarini Excel bazadagi avvalgi holatlar bilan solishtiradi va uni qisqa, o'rta yoki uzoq muddatli guruhga ajratadi.</p>
+
+          <div class="process-strip">
+            <div>
+              <span>01</span>
+              <strong>So'rovnoma</strong>
+              <p>26 ta baholash savoli va 4 ta ochiq savol.</p>
+            </div>
+            <div>
+              <span>02</span>
+              <strong>Decision Tree</strong>
+              <p>Model javoblarni mavjud baza bilan taqqoslaydi.</p>
+            </div>
+            <div>
+              <span>03</span>
+              <strong>HR natija</strong>
+              <p>Xodim xavf darajasi bo'yicha klasterga tushadi.</p>
+            </div>
+          </div>
+
+          <div class="start-card">
+            <div>
+              <p class="eyebrow">Testni boshlash</p>
+              <h2>Xodim ma'lumotlari</h2>
+            </div>
+            <div class="identity-grid">
+              <label class="field-label">
+                <span>Ism</span>
+                <input id="firstName" type="text" autocomplete="given-name" placeholder="Masalan: Anvar" required>
+              </label>
+              <label class="field-label">
+                <span>Familya</span>
+                <input id="lastName" type="text" autocomplete="family-name" placeholder="Masalan: Karimov" required>
+              </label>
+            </div>
+            <div class="start-actions">
+              <button id="startBtn" class="primary-btn">So'rovnomani boshlash</button>
+              <span class="form-note">Natija test tugagandan keyin avtomatik saqlanadi.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="start-right" aria-hidden="true">
+          <div class="screen-preview">
+            <div class="preview-top">
+              <div>
+                <span>Retention risk</span>
+                <strong>HR dashboard</strong>
+              </div>
+              <b>Live</b>
+            </div>
+
+            <div class="risk-summary">
+              <div>
+                <span>Qisqa muddatli</span>
+                <strong>Yuqori xavf</strong>
+              </div>
+              <div class="risk-meter"><i style="width: 72%"></i></div>
+              <p>Ketish haqida o'ylash, past qoniqish va boshqa ish izlash signallari kuchli.</p>
+            </div>
+
+            <div class="cluster-list">
+              <div class="cluster-item danger">
+                <span></span>
+                <div>
+                  <strong>Qisqa muddatli</strong>
+                  <small>tezkor HR suhbat</small>
+                </div>
+                <b>High</b>
+              </div>
+              <div class="cluster-item warning">
+                <span></span>
+                <div>
+                  <strong>O'rta muddatli</strong>
+                  <small>kuzatuv va motivatsiya</small>
+                </div>
+                <b>Watch</b>
+              </div>
+              <div class="cluster-item stable">
+                <span></span>
+                <div>
+                  <strong>Uzoq muddatli</strong>
+                  <small>barqaror xodim</small>
+                </div>
+                <b>Stable</b>
+              </div>
+            </div>
+
+            <div class="factor-card">
+              <div class="chart-title">
+                <span>Model ko'radigan omillar</span>
+                <span>Score</span>
+              </div>
+              <div class="chart-bars">
+                <div class="chart-line"><span>Ish haqi</span><div class="bar"><i style="width: 78%"></i></div><b>78</b></div>
+                <div class="chart-line"><span>Rahbariyat</span><div class="bar"><i style="width: 64%"></i></div><b>64</b></div>
+                <div class="chart-line"><span>Rivojlanish</span><div class="bar"><i style="width: 86%"></i></div><b>86</b></div>
+              </div>
+            </div>
+
+            <div class="preview-footer">
+              <span>Manba: baza.xlsx</span>
+              <strong>Decision Tree</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="testScreen" class="test-screen hidden">
+        <aside class="progress-panel">
+          <p class="eyebrow">So'rovnoma</p>
+          <h2 id="sectionTitle">Savollar</h2>
+          <div class="progress-track"><div id="progressBar"></div></div>
+          <p id="progressText" class="muted">0%</p>
+          <div id="stepList" class="step-list"></div>
+        </aside>
+
+        <form id="quizForm" class="question-panel">
+          <div id="questions"></div>
+          <div class="form-actions">
+            <button type="button" id="backBtn" class="secondary-btn">Orqaga</button>
+            <button type="button" id="nextBtn" class="primary-btn">Keyingi</button>
+            <button type="submit" id="submitBtn" class="primary-btn hidden">Natijani chiqarish</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="resultScreen" class="result-screen hidden">
+        <div class="result-card">
+          <p class="eyebrow">Yakuniy natija</p>
+          <h2 id="resultTitle"></h2>
+          <p id="resultText" class="lead"></p>
+          <div id="pathList" class="path-list"></div>
+          <button id="restartBtn" class="secondary-btn">Qayta boshlash</button>
+        </div>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

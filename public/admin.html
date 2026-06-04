@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin panel - test natijalari</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main class="admin-shell">
+      <header class="topbar">
+        <a class="brand-mark" href="/">Retention AI</a>
+        <div class="topbar-actions">
+          <a class="secondary-link" href="/">Test sahifasi</a>
+          <a class="primary-link" href="/api/admin/results.csv">Excelga yuklab olish</a>
+        </div>
+      </header>
+
+      <header class="admin-header">
+        <div>
+          <p class="eyebrow">Admin panel</p>
+          <h1>Test natijalari</h1>
+        </div>
+      </header>
+
+      <section class="stats-grid" id="statsGrid"></section>
+
+      <section class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Sana</th>
+              <th>Ism familya</th>
+              <th>Natija</th>
+              <th>Ish tajribasi</th>
+              <th>Lavozim</th>
+              <th>Ochiq javoblar</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody">
+            <tr><td colspan="6">Yuklanmoqda...</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+    <script src="admin.js"></script>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "it-employee-retention-test",
+  "version": "1.0.0",
+  "private": true,
+  "description": "IT markaz xodimlarining ishdan ketish ehtimolini Decision Tree orqali aniqlash.",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

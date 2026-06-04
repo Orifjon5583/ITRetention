@@ -1,0 +1,94 @@
+IT MARKAZ XODIMLARI ISHDAN KETISH EHTIMOLI BO'YICHA KLASTERLAR
+
+Ushbu tizim foydalanuvchi javoblarini baza.xlsx faylidagi oldingi javoblar va xulosalar bilan solishtiradi.
+Natijada foydalanuvchi 3 ta klasterdan biriga ajratiladi:
+
+1. QISQA MUDDATLI KLASTER
+
+Bu klasterga kirgan xodimning yaqin vaqt ichida ish joyini tark etish ehtimoli yuqori deb baholanadi.
+
+Odatda bunday natijaga quyidagi javoblar sabab bo'lishi mumkin:
+- xodim ish joyini tark etish haqida tez-tez o'ylaydi;
+- yaqin bir yil ichida boshqa ish izlash ehtimoli yuqori;
+- yaxshiroq imkoniyat bo'lsa, kompaniyani tark etishga tayyor;
+- ish haqi, rahbariyat, rivojlanish yoki ish muhiti bo'yicha qoniqish past;
+- kompaniyada uzoq muddat qolish rejasi past.
+
+Bu klaster HR uchun xavf signali hisoblanadi. Bunday xodimlar bilan suhbat o'tkazish, muammolarini aniqlash va ushlab qolish choralarini ko'rish kerak.
+
+
+2. O'RTA MUDDATLI KLASTER
+
+Bu klasterga kirgan xodim hozircha kompaniyada ishlayotgan bo'lsa ham, ayrim omillar sabab kelajakda ish joyini o'zgartirishi mumkin.
+
+Odatda bunday natijaga quyidagi holatlar sabab bo'lishi mumkin:
+- ayrim savollarda qoniqish o'rtacha;
+- ish haqi, karyera o'sishi, rahbariyat yoki baholash tizimida muammolar bor;
+- xodim darhol ketishni rejalashtirmaydi, lekin yaxshi imkoniyat bo'lsa ko'rib chiqishi mumkin;
+- kompaniyada qolishga undovchi omillar bor, lekin ular yetarlicha kuchli emas.
+
+Bu klaster HR uchun kuzatuv guruhi hisoblanadi. Bunday xodimlar bilan muntazam fikr almashish, motivatsiya va rivojlanish imkoniyatlarini yaxshilash muhim.
+
+
+3. UZOQ MUDDATLI KLASTER
+
+Bu klasterga kirgan xodimning kompaniyada uzoqroq ishlash ehtimoli yuqori deb baholanadi.
+
+Odatda bunday natijaga quyidagi javoblar sabab bo'lishi mumkin:
+- xodim ish haqi va imtiyozlardan qoniqadi;
+- rahbariyat va jamoa bilan munosabatlar yaxshi;
+- karyera va rivojlanish imkoniyatlari mavjud deb hisoblaydi;
+- ish va shaxsiy hayot muvozanati yaxshi;
+- yaqin vaqtda boshqa ish izlash ehtimoli past;
+- keyingi ikki yil davomida kompaniyada qolishni rejalashtiradi.
+
+Bu klaster barqaror xodimlar guruhi hisoblanadi. HR bunday xodimlarni rag'batlantirish, rivojlantirish va kompaniyaga yanada bog'lashga e'tibor berishi kerak.
+
+
+DECISION TREE ALGORITMI QANDAY ISHLATILADI
+
+Tizimda Decision Tree algoritmi server.js faylida ishlatilgan.
+
+Asosiy jarayon:
+
+1. baza.xlsx faylidan savollar, javoblar va xulosalar o'qiladi.
+2. Excel'dagi Xulosa / Xulosaa ustunlari tayyor natija sifatida olinadi.
+3. Decision Tree eski javoblar asosida model quradi.
+4. Yangi foydalanuvchi testni to'ldirganda, uning javoblari shu modeldan o'tkaziladi.
+5. Model foydalanuvchini quyidagi klasterlardan biriga ajratadi:
+   - Qisqa muddatli
+   - O'rta muddatli
+   - Uzoq muddatli
+
+server.js faylidagi asosiy funksiyalar:
+
+- entropy(rows)
+  Ma'lumotlar qanchalik aralash ekanini hisoblaydi.
+
+- informationGain(rows, feature)
+  Qaysi savol natijani yaxshiroq ajratishini topadi.
+
+- buildTree(rows, features)
+  Excel ma'lumotlari asosida Decision Tree modelini quradi.
+
+- predict(tree, answers, featuresByKey)
+  Yangi foydalanuvchi javoblarini modeldan o'tkazib, yakuniy klasterni aniqlaydi.
+
+
+ADMIN PANEL
+
+Admin panel orqali barcha foydalanuvchi natijalari ko'riladi.
+
+Admin panel manzili:
+http://localhost:3000/admin.html
+
+Admin quyidagilarni ko'ra oladi:
+- test topshirilgan sana;
+- foydalanuvchi ismi va familyasi;
+- yakuniy klaster;
+- ish tajribasi;
+- lavozimi;
+- ochiq savollarga javoblar.
+
+Natijalarni Excel'da ochish uchun CSV fayl sifatida yuklab olish mumkin.
+
